@@ -1,20 +1,32 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Route, RouterProvider, createBrowserRouter, createRoutesFromElements} from 'react-router-dom'
+import {Route, Routes, BrowserRouter } from 'react-router-dom'
 
-import serwerRequest from './components/ServerRequest'
-import MainPage from './pages/MainPage';
+import { AuthController } from './contexts/AuthContext.js';
+import MainPage from './components/MainPage/MainPage';
+import Header from "./components/Header/Header";
+import { CheckAuth } from './hocs/CheckAuth.js';
 
-const router = createBrowserRouter(createRoutesFromElements(
-    <Route path='/' >
-        <Route index element={
-            <MainPage />
-        } loader={serwerRequest}/>
-    </Route>
-))
+import { collections, lastAddedItems } from './test/collections';
+import UserPage from './components/UserPage/UserPage.js';
 
 function App() {
     return (
-        <RouterProvider router={router} />
+        <AuthController>
+            <BrowserRouter>
+                <Header />
+
+                <Routes>
+                    <Route path='/' element={
+                        <MainPage collections={collections} lastAddedItems={lastAddedItems}/>
+                    }/>
+                    <Route path='user' element={ 
+                        <CheckAuth>
+                            <UserPage /> 
+                        </CheckAuth>
+                    } />
+                </Routes>
+            </BrowserRouter>
+        </AuthController>
     );
 }
 

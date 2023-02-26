@@ -8,6 +8,8 @@ import { CheckAuth } from './hocs/CheckAuth.js';
 
 import { collections, lastAddedItems } from './test/collections';
 import UserPage from './components/UserPage/UserPage.js';
+import CreateCollection from './components/CreateCollection/CreateCollection.js';
+import ShowCollection from './components/ShowCollection/ShowCollection.js';
 
 function App() {
     return (
@@ -19,10 +21,16 @@ function App() {
                     <Route path='/' element={
                         <MainPage collections={collections} lastAddedItems={lastAddedItems}/>
                     }/>
-                    <Route path='user' element={ 
+                    <Route path='user/*' element={ 
                         <CheckAuth>
-                            <UserPage /> 
+                            <Routes>
+                                <Route path='/' element={<UserPage />} />
+                                <Route path='create_collection' element={<CreateCollection />} />
+                            </Routes>
                         </CheckAuth>
+                    } />
+                    <Route path='collection/:id' element={
+                        <ShowCollection />
                     } />
                 </Routes>
             </BrowserRouter>

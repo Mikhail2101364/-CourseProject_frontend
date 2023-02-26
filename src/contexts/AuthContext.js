@@ -10,39 +10,48 @@ export const AuthController = ({children}) => {
 
 
     const [userData, setUserData] = useState(null);
-    //const [isAuth, setIsAuth] = useState(false);   
+    const [isAuth, setIsAuth] = useState(false);   
+
+    const updateUserAuth = async () => {
+        try {
+            const data = await serverJWTRequest('/user')
+            console.log('Update auth')
+            if (!data) {
+                setIsAuth(false);
+            }
+            if (!!data.message) {
+                setIsAuth(false);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const authLogIn = (token) => {
         localStorage.setItem("token", token);
-        //setIsAuth(true);
+        setIsAuth(true);
         console.log('authLog In !!!')
-        window.location.reload();
     };
-    
+
     const authLogOut = () => {
         localStorage.removeItem("token");      
         setUserData(null);
-        //setIsAuth(false);
+        setIsAuth(false);
         console.log('authLog Out !!!')
-        window.location.reload();
     };
 
-    useEffect( ()=>{
+    useEffect( ()=>{ 
         const fetchUserData = async () => {
             try {
                 const data = await serverJWTRequest('/user')
                 console.log('HOC: ',data)
                 if (!data) {
-                    setUserData(null)
-                    //setIsAuth(false);
-                    localStorage.removeItem("token");
-                } else if ((data.message === "Unauthorized")) {
-                    setUserData(null)
-                    //setIsAuth(false);
-                    localStorage.removeItem("token");
+                    authLogOut();
+                } else if (!!data.message) {
+                    authLogOut();
                 } else {
                     setUserData(data)
-                    //setIsAuth(true);
+                    setIsAuth(true);
                 }
             } catch (error) {
                 console.error(error);
@@ -50,9 +59,9 @@ export const AuthController = ({children}) => {
         };
         fetchUserData();
         console.log('!!!! H.O.C. useEffect')
-    },[])
+    },[isAuth])
 
-    const value = { userData, authLogIn, authLogOut};
+    const value = { updateUserAuth, isAuth, userData, authLogIn, authLogOut };
 
     console.log('Value in AuthContext: ',value)
 

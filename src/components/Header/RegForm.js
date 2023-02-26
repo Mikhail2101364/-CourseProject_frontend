@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, InputGroup } from 'react-bootstrap';
 import { serverPostRequest } from '../../services/ServerRequest';
+import { useAuthData } from '../../hooks/useAuthData'
 
 function RegForm({ show, onHide }) {
 
@@ -10,12 +11,15 @@ function RegForm({ show, onHide }) {
     const [emailInvalid, setEmailInvalid] = useState(false);
     const [usernamedInvalid, setUsernameInvalid] = useState(false);
 
+    const { authLogIn } = useAuthData();
+
     function RegControl (a) {
         if (a.message === "User already exists") {
             setEmailInvalid(true);
         } else if(a.message === "This username is already taken") {
             setUsernameInvalid(true);
         } else if(a.token) {
+            authLogIn(a.token);
             onHide()
         } else {
             console.log(a.message)

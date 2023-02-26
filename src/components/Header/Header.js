@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import LogInForm from './LogInForm';
@@ -10,22 +10,15 @@ function Header() {
 
     const [showLogIn, setShowLogIn] = useState(false);
     const [showReg, setShowReg] = useState(false);
-    const [isAuth, setIsAuth] = useState(false);
 
     const handleShowLogIn = () => setShowLogIn(true);
     const handleShowReg = () => setShowReg(true);
     const handleLogOut = () => {
         console.log('hangleLogOut')
         authLogOut(()=>{})
-        setIsAuth(false)
     }
     
-    const { authLogOut } = useAuthData(); 
-
-    useEffect(()=>{
-        setIsAuth(!!localStorage.getItem("token"));
-    },[showLogIn, showReg])
-   
+    const { isAuth, authLogOut } = useAuthData(); 
 
     return (
         <div>

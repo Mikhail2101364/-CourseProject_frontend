@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Image, ListGroup, Button } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import { collections } from '../../test/collections';
 
 import { useAuthData } from '../../hooks/useAuthData'
@@ -30,7 +31,9 @@ const UserPage = (test) => {
                 <ListGroup.Item key={index}>{collection.title}</ListGroup.Item>
                 ))}
             </ListGroup>
-            <Button variant="primary">Create New Collection</Button>
+            <LinkContainer to="/user/create_collection">             
+                <Button variant="primary">Create New Collection</Button>
+            </LinkContainer>
             </Col>
         </Row>
         </Container>

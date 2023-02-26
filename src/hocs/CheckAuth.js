@@ -1,14 +1,16 @@
 import { useLocation, Navigate } from 'react-router-dom';
-//import { useAuthData } from '../hooks/useAuthData'
+import { useAuthData } from '../hooks/useAuthData'
 
 const CheckAuth = ({children}) => {
     const location = useLocation();
-    //const { isAuth } = useAuthData();
+    const { isAuth, updateUserAuth } = useAuthData();
 
     console.log('CheckAuth !!')
 
-    if (!localStorage.getItem('token')) {
+    if (!isAuth) {    
         return <Navigate to='/' state={{from: location}} />
+    } else {
+        updateUserAuth();
     }
 
   return children;

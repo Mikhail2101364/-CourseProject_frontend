@@ -3,12 +3,8 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 
 const FieldType = ["Number", "String", "Text", "Date", "Checkbox"];
 
-const CustomFields = (props) => {
+const ModifyCustomFields = (props) => {
     const { onCustomFieldChange, currentCustomFields } = props;
-    // const defaultFields = [
-    //     { name: 'Title', value: '', type: 'String' },
-    //     { name: 'Tags', value: '', type: 'String' }
-    // ];
     const [fields, setFields] = useState(currentCustomFields);
     const [type, setType] = useState(FieldType[0]);
     const [errorMessage, setErrorMessage] = useState('');
@@ -140,23 +136,10 @@ const CustomFields = (props) => {
                         </Button>
                         </Col>
                     </Row>
-                
-                {/* {(field.type === "Checkbox") && (
-                    <Form.Check onChange={(e) => handleChange(index, 'value', e.target.checked)}/>
-                )}
-                {(field.type !== "Checkbox") && (
-                    <Form.Control
-                        as={field.type === "Text" ? 'textarea' : 'input'}
-                        type={setInputType(field.type)}
-                        placeholder="Value"
-                        value={field.value}
-                        onChange={(e) => handleChange(index, 'value', e.target.value)}
-                    />
-                )} */}
                 </Form.Group>
             ))}
         </>
     );
 };
 
-export default CustomFields;
+export default ModifyCustomFields;

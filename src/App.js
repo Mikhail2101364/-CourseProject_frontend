@@ -6,10 +6,12 @@ import MainPage from './components/MainPage/MainPage';
 import Header from "./components/Header/Header";
 import { CheckAuth } from './hocs/CheckAuth.js';
 
-import { collections, lastAddedItems } from './test/collections';
 import UserPage from './components/UserPage/UserPage.js';
 import CreateCollection from './components/CreateCollection/CreateCollection.js';
+import ModifyCollection from './components/CreateCollection/ModifyCollection.js';
 import ShowCollection from './components/ShowCollection/ShowCollection.js';
+import CreateItem from './components/CreateItem/CreateItem.js';
+import ShowItem from './components/ShowItem/ShowItem.js';
 
 function App() {
     return (
@@ -19,7 +21,7 @@ function App() {
 
                 <Routes>
                     <Route path='/' element={
-                        <MainPage collections={collections} lastAddedItems={lastAddedItems}/>
+                        <MainPage />
                     }/>
                     <Route path='user/*' element={ 
                         <CheckAuth>
@@ -29,8 +31,17 @@ function App() {
                             </Routes>
                         </CheckAuth>
                     } />
-                    <Route path='collection/:id' element={
-                        <ShowCollection />
+                    <Route path='collection/:id/*' element={
+                        <Routes>
+                            <Route path='/' element={<ShowCollection />} />
+                            <Route path='modify' element={<ModifyCollection />} />
+                        </Routes>
+                    } />
+                    <Route path='item/*' element={
+                        <Routes>
+                            <Route path='add' element={<CreateItem />} />
+                            <Route path=':id' element={<ShowItem />} />
+                        </Routes>
                     } />
                 </Routes>
             </BrowserRouter>

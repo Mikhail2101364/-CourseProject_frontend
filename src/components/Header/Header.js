@@ -4,25 +4,28 @@ import { LinkContainer } from 'react-router-bootstrap';
 import LogInForm from './LogInForm';
 import RegForm from './RegForm';
 import { useAuthData } from '../../hooks/useAuthData'
+import { useNavigate } from "react-router-dom";
 
 function Header() {
 
 
     const [showLogIn, setShowLogIn] = useState(false);
     const [showReg, setShowReg] = useState(false);
+    const navigate = useNavigate();
 
     const handleShowLogIn = () => setShowLogIn(true);
     const handleShowReg = () => setShowReg(true);
     const handleLogOut = () => {
         console.log('hangleLogOut')
         authLogOut(()=>{})
+        navigate('/');
     }
     
     const { isAuth, authLogOut } = useAuthData(); 
 
     return (
         <div>
-        <Navbar bg="dark" variant="dark" expand="lg" style={{ height: "15vh" }}>
+        <Navbar bg="dark" variant="dark" expand="lg" style={{ minHeight: "70px" }}>
             <Container>
                 <Navbar.Brand href="/">My Collections</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />

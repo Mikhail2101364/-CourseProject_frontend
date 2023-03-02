@@ -37,7 +37,6 @@ export const AuthController = ({children}) => {
         localStorage.removeItem("token");      
         setUserData(null);
         setIsAuth(false);
-        console.log('authLog Out !!!')
     };
 
     useEffect( ()=>{ 

@@ -1,29 +1,29 @@
 import React, { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import CustomFields from "./CustomFields";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import ModifyCustomFields from "./ModifyCustomFields";
 import AnswerModals from "./AnswerModals"
 import { serverPostAuthRequest } from '../../services/ServerRequest';
 
 const themes = ["Books", "Paintings", "Music Instruments"];
 
-const CreateCollection = () => {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [theme, setTheme] = useState(themes[0]);
-    const [customFields, setCustomFields] = useState([
-        { name: 'Title', value: '', type: 'String' },
-        { name: 'Tags', value: '', type: 'String' },
-    ]);
+const ModifyCollection = () => {
+    const { state } = useLocation();
+    const { collection } = state;
+    const { id } = useParams();
+
+    const [description, setDescription] = useState(collection.description);
+    const [theme, setTheme] = useState(collection.theme);
+    const [customFields, setCustomFields] = useState(collection.fields);
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [collectionID, setCollectionID] = useState("");
     const navigate = useNavigate();
 
-    function createCollectionControl(a) {
+    function modifyCollectionControl(a) {
         if (a.message === "Collection with this name already exists") {
             setShowErrorModal(true);
-        } else if(a.message === "Collection was created") {
+        } else if(a.message === "Collection was modified") {
             setCollectionID(a.collectionID);
             setShowSuccessModal(true);
         } else {
@@ -33,18 +33,13 @@ const CreateCollection = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        let serwerRes = await serverPostAuthRequest('/collections/create', {
-            title: title, 
+        console.log('new fields: ',customFields)
+        let serwerRes = await serverPostAuthRequest(`/collections/modify/${id}`, {
             description: description, 
             theme: theme, 
-            customFields: customFields
-            // [
-            //     { name: 'Title', value: '', type: 'String' },
-            //     ...customFields,
-            //     { name: 'Tags', value: '', type: 'String' },
-            // ]
+            customFields: customFields,
         });
-        await createCollectionControl(serwerRes);
+        await modifyCollectionControl(serwerRes);
         console.log(await serwerRes)
     };
 
@@ -54,16 +49,15 @@ const CreateCollection = () => {
 
     return (
         <Container className="mb-5">
-        <h1>Create New Collection</h1>
+        <h1>Modify Collection</h1>
         <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formBasicTitle" className="mb-3">
             <Form.Label>Title</Form.Label>
             <Form.Control
-                required
                 type="text"
                 placeholder="Enter title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                value={collection.name}
+                disabled
             />
             </Form.Group>
 
@@ -95,7 +89,7 @@ const CreateCollection = () => {
             </Form.Control>
             </Form.Group>
 
-            <CustomFields onCustomFieldChange={(i) => setCustomFields(i)} currentCustomFields={customFields}/>
+            <ModifyCustomFields onCustomFieldChange={(i) => setCustomFields(i)} currentCustomFields={customFields}/>
 
             <Button variant="outline-secondary" type="submit" className="me-4">Create Collection</Button>
         </Form>
@@ -104,11 +98,11 @@ const CreateCollection = () => {
             showSuccessModal={showSuccessModal}
             hideErrorModal={() => setShowErrorModal(false)}
             hideSuccessModal={() => setShowSuccessModal(false)}
-            collectionName={title}
+            collectionName={collection.name}
             toCollection={toCollection}
         />
         </Container>
     )
 }
 
-export default CreateCollection;
+export default ModifyCollection;

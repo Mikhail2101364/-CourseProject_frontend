@@ -1,40 +1,73 @@
-import React from 'react';
-import { Nav, Container, Row, Col, Card } from 'react-bootstrap';
-import './custom_style.css'
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import './custom_style_MainPage.css'
+import { serverGetRequest } from '../../services/ServerRequest';
+import defaultAvatar from '../../pictures/defaultAvatar.png';
 
 
-function MainPage ({ collections, lastAddedItems }) {
+function MainPage () {
+
+    const [collections, setCollections] = useState(null);
+    const [items, setItems] = useState(null);
+
+    useEffect(() => {
+        async function fetchLastCollections() {
+            const data = await serverGetRequest('/collections/last');
+            setCollections(data)
+        }
+        async function fetchLastItems() {
+            const data = await serverGetRequest('/items/last');
+            console.log('items: ', items)
+            setItems(data)
+        }
+        fetchLastCollections();
+        fetchLastItems();
+        console.log('MainPage useEffect')
+    }, []);
+
+    // if ((collections===null)) {
+    //     return <div>Loading...</div>;
+    // }
+
     return(
-        <Container style={{ marginTop: '50px' }} >
+        <Container className="mt-5">
         <h2 className="text-left mb-4">Collections</h2>
-        <Row>
-            {collections.map((collection, index) => (
-                <Col key={index} md={4} className="mb-4">
-                    <Nav.Link href={`/collections/${collection.id}`} className="card-link">
-                        <Card className="card">
-                            <Card.Img variant="top" width="100%" src={collection.image} alt={collection.title} />
+        <Row className="justify-content-md-evenly">
+            {collections && collections.map((collection, index) => (
+                <Col key={index} md={3} className="mb-4">
+                    <LinkContainer to={`/collection/${collection._id}`}>
+                        <div className="card-link h-100">
+                        <Card className="card h-100">
+                            <Card.Img variant="top" width="100%" src={collection.avatarUrl || defaultAvatar} alt={collection.title} />
                             <Card.Body>
                             <Card.Title>{collection.title}</Card.Title>
-                            <Card.Subtitle className="text-muted">by {collection.author}</Card.Subtitle>
+                            <Card.Subtitle className="text-muted">by {collection.authorName}</Card.Subtitle>
                             </Card.Body>
                         </Card>
-                    </Nav.Link>
+                        </div>
+                    </LinkContainer>
                 </Col>
             ))}
         </Row>
         <h2 className="text-left mb-4 mt-4">Last Added Items</h2>
-        <Row>
-            {lastAddedItems.map((item, index) => (
-                <Col key={index} md={4} className="mb-4">
-                    <Nav.Link href="#" className="card-link">
-                        <Card className="card">
-                            <Card.Img variant="top" width="100%" src={item.image} alt={item.title} />
+        <Row className="justify-content-md-evenly">
+            {items && items.map((item, index) => (
+                <Col key={index} md={3} className="mb-4">
+                    <LinkContainer to={`/item/${item._id}`}>
+                        <div className="card-link h-100">
+                        <Card className="card h-100">
+                            <Card.Header as="h2" style={{fontWeight: 'bold'}}>
+                                {item.customFields.String_Title}
+                            </Card.Header>
                             <Card.Body>
-                                <Card.Title>{item.title}</Card.Title>
-                                <Card.Subtitle className="text-muted">from {item.collectionTitle} collection</Card.Subtitle>
+                                <Card.Title className="mb-2 text-muted">From collection: {item.collectionTitle}</Card.Title>
+                                <Card.Subtitle className="mb-2 text-muted">Theme:  {item.theme}</Card.Subtitle>
+                                <Card.Subtitle className="mb-2 text-muted">by {item.authorName}</Card.Subtitle>
                             </Card.Body>
                         </Card>
-                    </Nav.Link>
+                        </div>
+                    </LinkContainer>
                 </Col>
             ))}
           </Row>

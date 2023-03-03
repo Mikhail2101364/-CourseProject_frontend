@@ -8,7 +8,7 @@ const ModifyCustomFields = (props) => {
     const [fields, setFields] = useState(currentCustomFields);
     const [type, setType] = useState(FieldType[0]);
     const [errorMessage, setErrorMessage] = useState('');
-    
+    const numberOfdefaultFields = 2;
 
     const handleAdd = () => {
         if (type === "String") {
@@ -41,16 +41,6 @@ const ModifyCustomFields = (props) => {
         setType(e.target.value);
         setErrorMessage('');
     };
-
-    // const setInputType = (type) => {
-    //         switch(type) {
-    //             case "Number": return 'number';
-    //             case "String": return 'text';
-    //             case "Text": return 'textarea';
-    //             case "Date": return 'date';
-    //             default: break;
-    //         }
-    // }
 
     return (
         <>
@@ -113,7 +103,7 @@ const ModifyCustomFields = (props) => {
                             type="text"
                             placeholder="Name"
                             value={field.name}
-                            onChange={(e) => handleChange(index+2, 'name', e.target.value)}
+                            onChange={(e) => handleChange(index+numberOfdefaultFields, 'name', e.target.value)}
                         />
                         </Col>
                         
@@ -131,7 +121,7 @@ const ModifyCustomFields = (props) => {
                         </Form.Control>
                         </Col>
                         <Col sm={3}>
-                        <Button variant="danger" onClick={() => handleRemove(index+2)}>
+                        <Button variant="danger" onClick={() => handleRemove(index+numberOfdefaultFields)}>
                             Remove
                         </Button>
                         </Col>

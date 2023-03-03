@@ -19,14 +19,10 @@ function ShowCollection() {
     useEffect(() => {
         async function fetchCollection() {
             const data = await serverGetRequest(`/collections/show/${id}`);
-            console.log(data)
-            console.log('data.coll: ',data.collection)
             setCollection(data.collection);
             setItems(data.items);
         }
-
         fetchCollection();
-        console.log('show collection useEffect')
     }, [id]);
 
     const deleteCollection = async () => {
@@ -36,7 +32,7 @@ function ShowCollection() {
         if (serwerRes.message==="Collection deleted") {
             navigate('/user');
         } else {
-            console.log('serwerRes.message')
+            console.log(serwerRes.message);
         }
     }
 
@@ -44,9 +40,6 @@ function ShowCollection() {
         return <div>Loading...</div>;
     }
 
-    
-    console.log('render coll')
-    console.log('coll: ',collection)
     return (
         <Container fluid>
             <Row className="m-3">
@@ -94,10 +87,10 @@ function ShowCollection() {
                     
                     <tbody>
                     {items[0]._id && items.map((item) => (
-                        <LinkContainer key={item._id} to={`/item/${item._id}`}>
+                        <LinkContainer key={`${item._id}-link`} to={`/item/${item._id}`}>
                             <tr className="custom-table-row">
                             {collection.itemSchema.map((field, index) => (
-                                <td key={`${item._id}-${field[index]}`} className="align-middle">
+                                <td key={`${item._id}-${field}`} className="align-middle">
                                     {collection.fields[index].type === 'Checkbox' ? (
                                         <Form.Check type="checkbox" checked={item.customFields[field]} readOnly />
                                     ) : collection.fields[index].type === 'Text' ? (

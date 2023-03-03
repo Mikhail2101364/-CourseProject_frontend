@@ -38,14 +38,8 @@ const CreateCollection = () => {
             description: description, 
             theme: theme, 
             customFields: customFields
-            // [
-            //     { name: 'Title', value: '', type: 'String' },
-            //     ...customFields,
-            //     { name: 'Tags', value: '', type: 'String' },
-            // ]
         });
         await createCollectionControl(serwerRes);
-        console.log(await serwerRes)
     };
 
     const toCollection = () => {
@@ -66,7 +60,6 @@ const CreateCollection = () => {
                 onChange={(e) => setTitle(e.target.value)}
             />
             </Form.Group>
-
 
             <Form.Group controlId="formBasicDescription" className="mb-3">
             <Form.Label>Description</Form.Label>

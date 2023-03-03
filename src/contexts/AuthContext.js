@@ -15,7 +15,6 @@ export const AuthController = ({children}) => {
     const updateUserAuth = async () => {
         try {
             const data = await serverJWTRequest('/user')
-            console.log('Update auth')
             if (!data) {
                 setIsAuth(false);
             }
@@ -30,7 +29,6 @@ export const AuthController = ({children}) => {
     const authLogIn = (token) => {
         localStorage.setItem("token", token);
         setIsAuth(true);
-        console.log('authLog In !!!')
     };
 
     const authLogOut = () => {
@@ -43,7 +41,6 @@ export const AuthController = ({children}) => {
         const fetchUserData = async () => {
             try {
                 const data = await serverJWTRequest('/user')
-                console.log('HOC: ',data)
                 if (!data) {
                     authLogOut();
                 } else if (!!data.message) {
@@ -57,12 +54,9 @@ export const AuthController = ({children}) => {
             }
         };
         fetchUserData();
-        console.log('!!!! H.O.C. useEffect')
     },[isAuth])
 
     const value = { updateUserAuth, isAuth, userData, authLogIn, authLogOut };
-
-    console.log('Value in AuthContext: ',value)
 
     return <AuthContext.Provider value={value}>
         {children}

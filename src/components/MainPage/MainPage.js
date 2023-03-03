@@ -18,17 +18,11 @@ function MainPage () {
         }
         async function fetchLastItems() {
             const data = await serverGetRequest('/items/last');
-            console.log('items: ', items)
             setItems(data)
         }
         fetchLastCollections();
         fetchLastItems();
-        console.log('MainPage useEffect')
     }, []);
-
-    // if ((collections===null)) {
-    //     return <div>Loading...</div>;
-    // }
 
     return(
         <Container className="mt-5">
@@ -73,7 +67,6 @@ function MainPage () {
           </Row>
       </Container>
     )
-    
 }
 
 export default MainPage;

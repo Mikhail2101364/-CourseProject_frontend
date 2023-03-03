@@ -4,16 +4,12 @@ import { useAuthData } from '../hooks/useAuthData'
 const CheckAuth = ({children}) => {
     const location = useLocation();
     const { isAuth, updateUserAuth } = useAuthData();
-
-    console.log('CheckAuth !!')
-
     if (!isAuth) {    
         return <Navigate to='/' state={{from: location}} />
     } else {
         updateUserAuth();
     }
-
-  return children;
+    return children;
 }
 
 export {CheckAuth};

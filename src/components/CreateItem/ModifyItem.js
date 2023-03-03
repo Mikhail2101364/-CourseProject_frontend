@@ -1,20 +1,21 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Container, Form, Button, Col, Row } from "react-bootstrap";
 import { serverPostAuthRequest } from '../../services/ServerRequest';
-import ItemAnswerModals from "./ItemAnswerModals"
+import ModifyItemAnswerModals from "./ModifyItemAnswerModals"
 
-const CreateItem = () => {
+const ModifyItem = () => {
     const { state } = useLocation();
-    const { collectionID, fields, itemSchema } = state;
-    const [itemFields, setItemFields] = useState(itemSchema.map((i)=> {return {[i]: false}}));
+    const { item } = state;
+    const { id } = useParams();
+    const [itemFields, setItemFields] = useState(item);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [itemID, setItemID] = useState("");
     const [itemName, setItemName] = useState("");
     const navigate = useNavigate();
-    
-    function createItemControl(a) {
-        if (a.message === "Item was created") {
+
+    function modifyItemControl(a) {
+        if (a.message === "Item was modified") {
             setItemID(a.itemData._id);
             setItemName(a.itemData.customFields.String_Title)
             setShowSuccessModal(true);
@@ -31,11 +32,11 @@ const CreateItem = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        let serwerRes = await serverPostAuthRequest('/items/create', {
-            collectionID: collectionID, 
-            itemFields: itemFields, 
+        const modifiedFields = itemFields.map((i)=> {return {[i.type+'_'+i.name]: i.value}})
+        let serwerRes = await serverPostAuthRequest(`/items/${id}/modify`, {
+            itemFields: modifiedFields, 
         });
-        await createItemControl(serwerRes);
+        await modifyItemControl(serwerRes);
     };
 
     const toItem = () => {
@@ -54,9 +55,9 @@ const CreateItem = () => {
 
     return (
         <Container>
-        <h1>Create New Item</h1>
+        <h1>Modify Item</h1>
         <Form onSubmit={handleSubmit}>
-            {fields.map((field, index) => (
+            {itemFields.map((field, index) => (
                 <Form.Group key={index} className="mb-4">
                     <Row className="mb-2">
                         <Col sm={4}>
@@ -79,7 +80,8 @@ const CreateItem = () => {
                         <Col sm={7}>
                         {(field.type === "Checkbox") && (
                             <Form.Check 
-                                onChange={(e) => handleChange(index, itemSchema[index], e.target.checked)} 
+                            checked={field.value}
+                                onChange={(e) => handleChange(index, 'value', e.target.checked)} 
                             />
                         )}
                         {(field.type !== "Checkbox") && (
@@ -87,7 +89,8 @@ const CreateItem = () => {
                                 as={field.type === "Text" ? 'textarea' : 'input'}
                                 type={setInputType(field.type)}
                                 placeholder="Value"
-                                onChange={(e) => handleChange(index, itemSchema[index], e.target.value)}
+                                value={field.value}
+                                onChange={(e) => handleChange(index, 'value', e.target.value)}
                                 required
                             />
                         )}
@@ -95,9 +98,9 @@ const CreateItem = () => {
                     </Row>
                 </Form.Group>
             ))}
-            <Button variant="outline-secondary" type="submit" className="me-4">Create Item</Button>
+            <Button variant="outline-secondary" type="submit" className="me-4">Modify Item</Button>
         </Form>
-        <ItemAnswerModals 
+        <ModifyItemAnswerModals 
             showSuccessModal={showSuccessModal}
             hideSuccessModal={() => setShowSuccessModal(false)}
             itemName={itemName}
@@ -107,4 +110,4 @@ const CreateItem = () => {
     )
 }
 
-export default CreateItem;
+export default ModifyItem;

@@ -5,14 +5,10 @@ const FieldType = ["Number", "String", "Text", "Date", "Checkbox"];
 
 const CustomFields = (props) => {
     const { onCustomFieldChange, currentCustomFields } = props;
-    // const defaultFields = [
-    //     { name: 'Title', value: '', type: 'String' },
-    //     { name: 'Tags', value: '', type: 'String' }
-    // ];
     const [fields, setFields] = useState(currentCustomFields);
     const [type, setType] = useState(FieldType[0]);
     const [errorMessage, setErrorMessage] = useState('');
-    
+    const numberOfdefaultFields = 2;
 
     const handleAdd = () => {
         if (type === "String") {
@@ -45,16 +41,6 @@ const CustomFields = (props) => {
         setType(e.target.value);
         setErrorMessage('');
     };
-
-    // const setInputType = (type) => {
-    //         switch(type) {
-    //             case "Number": return 'number';
-    //             case "String": return 'text';
-    //             case "Text": return 'textarea';
-    //             case "Date": return 'date';
-    //             default: break;
-    //         }
-    // }
 
     return (
         <>
@@ -117,7 +103,7 @@ const CustomFields = (props) => {
                             type="text"
                             placeholder="Name"
                             value={field.name}
-                            onChange={(e) => handleChange(index+2, 'name', e.target.value)}
+                            onChange={(e) => handleChange(index+numberOfdefaultFields, 'name', e.target.value)}
                         />
                         </Col>
                         
@@ -135,24 +121,11 @@ const CustomFields = (props) => {
                         </Form.Control>
                         </Col>
                         <Col sm={3}>
-                        <Button variant="danger" onClick={() => handleRemove(index+2)}>
+                        <Button variant="danger" onClick={() => handleRemove(index+numberOfdefaultFields)}>
                             Remove
                         </Button>
                         </Col>
                     </Row>
-                
-                {/* {(field.type === "Checkbox") && (
-                    <Form.Check onChange={(e) => handleChange(index, 'value', e.target.checked)}/>
-                )}
-                {(field.type !== "Checkbox") && (
-                    <Form.Control
-                        as={field.type === "Text" ? 'textarea' : 'input'}
-                        type={setInputType(field.type)}
-                        placeholder="Value"
-                        value={field.value}
-                        onChange={(e) => handleChange(index, 'value', e.target.value)}
-                    />
-                )} */}
                 </Form.Group>
             ))}
         </>

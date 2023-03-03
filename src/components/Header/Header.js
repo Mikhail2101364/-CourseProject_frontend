@@ -16,7 +16,6 @@ function Header() {
     const handleShowLogIn = () => setShowLogIn(true);
     const handleShowReg = () => setShowReg(true);
     const handleLogOut = () => {
-        console.log('hangleLogOut')
         authLogOut(()=>{})
         navigate('/');
     }
@@ -24,7 +23,6 @@ function Header() {
     const { isAuth, authLogOut } = useAuthData(); 
 
     return (
-        <div>
         <Navbar bg="dark" variant="dark" expand="lg" style={{ minHeight: "70px" }}>
             <Container>
                 <Navbar.Brand href="/">My Collections</Navbar.Brand>
@@ -54,10 +52,7 @@ function Header() {
                 </Navbar.Collapse>
             </Container>
         </Navbar>
-
-        
-        </div>
-  );
+    );
 };
 
 export default Header;

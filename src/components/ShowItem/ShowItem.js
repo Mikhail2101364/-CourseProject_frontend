@@ -18,8 +18,6 @@ function ShowItem() {
     useEffect(() => {
         async function fetchItem() {
             const data = await serverGetRequest(`/items/show/${id}`);
-            console.log(data)
-            console.log('data.coll: ',data.collection)
             setCollection(data.collection);
             setItem(data.item);
         }
@@ -34,7 +32,7 @@ function ShowItem() {
         if (serwerRes.message==="Item deleted") {
             navigate(`/collection/${collection._id}`);
         } else {
-            console.log('serwerRes.message')
+            console.log(serwerRes.message)
         }
     }
 
@@ -44,12 +42,21 @@ function ShowItem() {
 
     return (
         <div className="container mt-3">
-                <Card>
+            <Card>
                 <Card.Header as="h2" style={{fontWeight: 'bold'}} className="d-flex justify-content-between align-items-center">
-                        {item[0].value}
-                        {(userData && (userData.username === collection.authorName)) && (
-                            <Button variant="outline-secondary" size="lg" onClick={deleteItem}>Delete Item</Button>
-                        )}
+                    {item[0].value}
+                    {(userData && (userData.username === collection.authorName)) && (
+                        <div>
+                        <LinkContainer to={`/item/${id}/modify`} state={{ 
+                            item: item,
+                            itemSchema: Object.keys(collection.itemSchema),
+                            collectionID: collection._id
+                        }}>  
+                            <Button variant="outline-secondary" className="mx-3" size="lg" >Modify Item</Button>
+                        </LinkContainer>
+                        <Button variant="outline-secondary" size="lg" onClick={deleteItem}>Delete Item</Button>
+                        </div>
+                    )}
                 </Card.Header>
                 <Card.Body>
                     <LinkContainer to={`/collection/${collection._id}`}>
@@ -57,28 +64,28 @@ function ShowItem() {
                     </LinkContainer>
                     <Card.Subtitle className="mb-2 text-muted">Theme:  {collection.theme}</Card.Subtitle>
                     <Card.Subtitle className="mb-2 text-muted">by {collection.authorName}</Card.Subtitle>
-                        <Table hover>
-                            <tbody>
-                                {item.slice(1).map((item,index) => (
-                                <tr key={index}>
-                                    <td className="text-bg-light" style={{fontWeight: 'bold'}}>{item.name}</td>
-                                    {item.type === 'Checkbox' ? (
-                                        <td>
-                                            <Form.Check type="checkbox" checked={item.value} readOnly />
-                                        </td>
-                                    ) : item.type === 'Text' ? (
-                                        <td>
-                                            <ReactMarkdown>{item.value.replace(/\n/g, '  \n')}</ReactMarkdown>
-                                        </td>
-                                    ) : (
-                                    <td>{item.value}</td>
-                                    )}
-                                </tr>
-                                ))}
-                            </tbody>
-                        </Table>
+                    <Table hover>
+                        <tbody>
+                            {item.slice(1).map((item,index) => (
+                            <tr key={index}>
+                                <td className="text-bg-light" style={{fontWeight: 'bold'}}>{item.name}</td>
+                                {item.type === 'Checkbox' ? (
+                                    <td>
+                                        <Form.Check type="checkbox" checked={item.value} readOnly />
+                                    </td>
+                                ) : item.type === 'Text' ? (
+                                    <td>
+                                        <ReactMarkdown>{item.value.replace(/\n/g, '  \n')}</ReactMarkdown>
+                                    </td>
+                                ) : (
+                                <td>{item.value}</td>
+                                )}
+                            </tr>
+                            ))}
+                        </tbody>
+                    </Table>
                 </Card.Body>
-                </Card>
+            </Card>
         </div>
     );
 }

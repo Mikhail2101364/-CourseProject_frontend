@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ModifyCustomFields from "./ModifyCustomFields";
-import AnswerModals from "./AnswerModals"
+import ModifyAnswerModals from "./ModifyAnswerModals"
 import { serverPostAuthRequest } from '../../services/ServerRequest';
 
 const themes = ["Books", "Paintings", "Music Instruments"];
@@ -15,15 +15,12 @@ const ModifyCollection = () => {
     const [description, setDescription] = useState(collection.description);
     const [theme, setTheme] = useState(collection.theme);
     const [customFields, setCustomFields] = useState(collection.fields);
-    const [showErrorModal, setShowErrorModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [collectionID, setCollectionID] = useState("");
     const navigate = useNavigate();
 
     function modifyCollectionControl(a) {
-        if (a.message === "Collection with this name already exists") {
-            setShowErrorModal(true);
-        } else if(a.message === "Collection was modified") {
+        if(a.message === "Collection was modified") {
             setCollectionID(a.collectionID);
             setShowSuccessModal(true);
         } else {
@@ -33,14 +30,12 @@ const ModifyCollection = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('new fields: ',customFields)
         let serwerRes = await serverPostAuthRequest(`/collections/modify/${id}`, {
             description: description, 
             theme: theme, 
             customFields: customFields,
         });
         await modifyCollectionControl(serwerRes);
-        console.log(await serwerRes)
     };
 
     const toCollection = () => {
@@ -60,7 +55,6 @@ const ModifyCollection = () => {
                 disabled
             />
             </Form.Group>
-
 
             <Form.Group controlId="formBasicDescription" className="mb-3">
             <Form.Label>Description</Form.Label>
@@ -91,12 +85,10 @@ const ModifyCollection = () => {
 
             <ModifyCustomFields onCustomFieldChange={(i) => setCustomFields(i)} currentCustomFields={customFields}/>
 
-            <Button variant="outline-secondary" type="submit" className="me-4">Create Collection</Button>
+            <Button variant="outline-secondary" type="submit" className="me-4">Modify Collection</Button>
         </Form>
-        <AnswerModals 
-            showErrorModal={showErrorModal} 
+        <ModifyAnswerModals 
             showSuccessModal={showSuccessModal}
-            hideErrorModal={() => setShowErrorModal(false)}
             hideSuccessModal={() => setShowSuccessModal(false)}
             collectionName={collection.name}
             toCollection={toCollection}

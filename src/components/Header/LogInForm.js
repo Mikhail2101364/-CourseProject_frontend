@@ -67,6 +67,4 @@ function LogInForm({ show, onHide }) {
     )
 }
 
-
-
 export default LogInForm;

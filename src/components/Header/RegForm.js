@@ -73,8 +73,6 @@ function RegForm({ show, onHide }) {
         </Modal.Body>
         </Modal>
     )
-    
-
 }
 
 export default RegForm;

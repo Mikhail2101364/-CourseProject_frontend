@@ -23,7 +23,7 @@ function Header() {
     const { isAuth, authLogOut } = useAuthData(); 
 
     return (
-        <Navbar bg="dark" variant="dark" expand="lg" style={{ minHeight: "70px" }}>
+        <Navbar bg="light" variant="light" expand="lg" style={{ minHeight: "70px" }}>
             <Container>
                 <Navbar.Brand href="/">My Collections</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />

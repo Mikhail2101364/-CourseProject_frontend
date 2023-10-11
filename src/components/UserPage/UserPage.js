@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Image, Button, Card } from 'react-bootstrap';
+import React, { useState, useEffect, } from 'react';
+import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import defaultAvatar from '../../pictures/defaultAvatar.png';
 import { useAuthData } from '../../hooks/useAuthData'
-import { serverJWTRequest } from '../../services/ServerRequest';
+import { serverJWTRequest, serverPostAuthFormDataImageRequest, serverPostAuthRequest } from '../../services/ServerRequest';
 import './custom_style_UserPage.css'
+
+import ImageWithDropzone from './ImageWithDropzone';
 
 const UserPage = () => {
 
-    const { userData } = useAuthData();
+    const { userData, updateUserData } = useAuthData();
     const [collections, setCollections] = useState(null);
 
     useEffect(() => {
@@ -18,7 +20,24 @@ const UserPage = () => {
         }
         fetchCollections();
     }, [userData]);
-    
+
+    const [userAvatar, setUserAvatar] = useState(userData.avatarUrl ? userData.avatarUrl : null);
+
+    const handleFileUpload = async function (newFile) {
+        const avatarURL = await serverPostAuthFormDataImageRequest('/users/setavatar', newFile, userData.username);
+        console.log('setUserAvatar',avatarURL);
+        setUserAvatar(avatarURL.userAvatar);
+        updateUserData(()=>{});
+    }
+
+    const handleFileDelete = async function () {
+        const deleteAvatar = await serverPostAuthRequest('/users/deleteavatar', { avatarUrl: userData.avatarUrl });
+        console.log('setUserAvatar',deleteAvatar);
+        setUserAvatar(deleteAvatar.userAvatar);
+        updateUserData(()=>{});
+    }
+
+
     if ((userData===null)||(collections===null)) {
         return <div>Loading...</div>;
     }
@@ -27,7 +46,12 @@ const UserPage = () => {
         <Container>
             <Row className="m-3 justify-content-center">
                 <Col sm={3}>
-                    <Image src={defaultAvatar} roundedCircle />
+                    <ImageWithDropzone 
+                        imageDefaultAvatar={defaultAvatar} 
+                        onFileUpload={handleFileUpload}
+                        onFileDelete={handleFileDelete}
+                        imageUserAvatar={userAvatar}
+                    />
                 </Col>
                 <Col>
                     <Container className="mt-3 justify-content-center">

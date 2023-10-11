@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CustomFields from "./CustomFields";
 import AnswerModals from "./AnswerModals"
 import { serverPostAuthRequest } from '../../services/ServerRequest';
+import {useDropzone} from 'react-dropzone'
 
 const themes = ["Books", "Paintings", "Music Instruments"];
 
@@ -37,11 +38,33 @@ const CreateCollection = () => {
             title: title, 
             description: description, 
             theme: theme, 
+            // avatarFile: avatarFile,
             customFields: customFields
         });
         await createCollectionControl(serwerRes);
     };
 
+// const {acceptedFiles, getRootProps, getInputProps} = useDropzone()
+
+//   const files = acceptedFiles.map(file => (
+//     <li key={file.path}>
+//       {file.path} - {file.size} bytes
+//     </li>
+//   ))
+const [avatarFile, setAvatarFile] = useState(null);
+
+//   const handleFileSelect = (e) => {
+
+//     const reader = new FileReader();
+//   reader.readAsDataURL(e.target.files[0]);
+//   reader.onload = () => {
+//     const fileString = reader.result.split(",")[1];
+
+// setAvatarFile(fileString);
+//   }
+//     console.log('ava: ',avatarFile)
+//   }
+  
     const toCollection = () => {
         navigate(`/collection/${collectionID}`);
     }
@@ -88,6 +111,26 @@ const CreateCollection = () => {
             </Form.Control>
             </Form.Group>
 
+            {/* <section>
+      <div {...getRootProps()}>
+        <input {...getInputProps()} />
+        <p>Drag 'n' drop some files here, or click to select files</p>
+      </div>
+      <aside>
+        <h4>Files</h4>
+        <ul>{files}</ul>
+      </aside>
+    </section> */}
+
+{/* <Form.Group controlId="formFile" className="mb-3">
+        <Form.Label>Upload an avatar</Form.Label>
+        <Form.Control
+          type="file"
+          accept=".png,.jpg,.jpeg"
+          onChange={handleFileSelect}
+        />
+      </Form.Group> */}
+            
             <CustomFields onCustomFieldChange={(i) => setCustomFields(i)} currentCustomFields={customFields}/>
 
             <Button variant="outline-secondary" type="submit" className="me-4">Create Collection</Button>

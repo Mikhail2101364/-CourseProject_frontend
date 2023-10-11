@@ -26,6 +26,15 @@ export const AuthController = ({children}) => {
         }
     };
 
+    const updateUserData = async () => {
+        try {
+            const data = await serverJWTRequest('/user')
+            setUserData(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const authLogIn = (token) => {
         localStorage.setItem("token", token);
         setIsAuth(true);
@@ -56,7 +65,7 @@ export const AuthController = ({children}) => {
         fetchUserData();
     },[isAuth])
 
-    const value = { updateUserAuth, isAuth, userData, authLogIn, authLogOut };
+    const value = { updateUserAuth, updateUserData, isAuth, userData, authLogIn, authLogOut };
 
     return <AuthContext.Provider value={value}>
         {children}
